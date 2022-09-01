@@ -1,6 +1,10 @@
 package com.zc.services;
 
+import com.github.pagehelper.PageInfo;
+import com.zc.domain.SaleOrder;
 import com.zc.domain.Users;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA
@@ -12,5 +16,9 @@ import com.zc.domain.Users;
  */
 public interface UserService {
 
-    Users getU(Integer id);
+    List<Users> getU(Users user);
+
+    PageInfo<Users> getListUsers(Integer pageNum, Integer pageSize, Users user);
+
+    PageInfo<SaleOrder> getsaleOrder(Integer pageNum, Integer pageSize, SaleOrder saleOrder);
 }

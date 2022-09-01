@@ -7,18 +7,11 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA
- *
  * @author: 山毛榉
- * @date : 2022/7/5 9:24
+ * @date : 2022/8/31 18:02
  * @version: 1.0
- * Description: mapper
  */
 @Mapper
-public interface UserMapper {
-
-    List<Users> getU(Users user);
-    List<Users> getListUser(Users user);
+public interface SaleOrderMapper {
     List<SaleOrder> getsaleOrder(SaleOrder saleOrder);
-
 }

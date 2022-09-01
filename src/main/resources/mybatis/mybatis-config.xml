@@ -4,7 +4,7 @@
 <configuration>
 
     <plugins>
-        <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor"/>
     </plugins>
 
         <!--加载sql映射文件-->
