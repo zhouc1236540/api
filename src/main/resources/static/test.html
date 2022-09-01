@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/jquery.js"></script>
+    <script>
+
+        $(function () {
+            console.log("hello world");
+            $("#login").click(function () {
+                let obj = {};
+
+                function getObj(str) {
+                    let arr = str.split('&');
+                    arr.map(function (item) {
+                        let tempArr = item.split('=');
+                        obj[tempArr[0]] = tempArr[1];
+                    });
+                    console.log(obj);
+                    return obj;
+                }
+
+                let p = $("#loginForm").serialize();
+                let data = getObj(p);
+
+
+                var settings = {
+
+                    "url": "https://api.vlauncher.com/jeecg-boot/apis/login?",
+                    "method": "POST",
+                    "timeout": 0,
+                    data: data,
+                    "headers": {
+                        "User-Agent": "apifox/1.0.0 (https://www.apifox.cn)",
+                        "Content-Type": "application/json"
+                    },
+                }
+                $.ajax(settings).done(function (response) {
+                    alert("hello world");
+                    console.log("-----------------------");
+                    console.log(response);
+                });
+            });
+
+
+        });
+
+    </script>
+</head>
+
+<body>
+<form id="loginForm">
+    <label>
+        <input type="text" name="username" value="admin">
+    </label><br>
+    <label>
+        <input type="text" name="password" value="test123+">
+    </label>
+    <ol>
+        <button id="login" class="login">button</button>
+    </ol>
+</form>
+
+
+</body>
+
+</html>
