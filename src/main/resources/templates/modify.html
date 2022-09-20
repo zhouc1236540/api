@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+
+    input{
+      width: 200px;
+    }
+
+  </style>
+</head>
+<body>
+<!--th:text 为 Thymeleaf 属性，用于在展示文本-->
+<h1 >欢迎您访问配置修改界面</h1>
+<form method="get" th:action="@{/update}" th:object="${DriverInfo}">
+  <span>用户名  :</span><input type="text" maxlength="" th:value="${map.get('jdbc.username')}"><br/>
+  <span>密 码:   </span><input type="password" th:value="${map.get('jdbc.password')}"><br/>
+  <span>url地址: </span><input type="text" th:value="${map.get('jdbc.url')}"><br/>
+  <span>驱动地址: </span><input type="text" th:value="${map.get('jdbc.driverClassName')}"><br/>
+  <input type="button" value="修改" >
+</form>
+
+
+</body>
+</html>

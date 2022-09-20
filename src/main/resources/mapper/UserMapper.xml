@@ -2,52 +2,71 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zc.dao.UserMapper">
-    <!-- <select id="getU" resultMap="getU">
-         select user_id ,user_name,user_password,user_email from tb_user
-         <where>
-             <choose>
-                 <when test="user_name !=null and user_name !=''">
-                     user_name=#{user_name}
-                 </when>
-             </choose>
-         </where>
-     </select>
-     <resultMap id="getU" type="com.zc.domain.Users">
-         <result column="user_id" property="user_id"/>
-         <result column="user_name" property="user_name"/>
-         <result column="user_password" property="user_password"/>
-         <result column="user_email" property="user_email"/>
-     </resultMap>
-     <select id="getListUser" resultType="com.zc.domain.Users">
+<mapper namespace="com.gl.dao.UserMapper">
+    <!-- 动态增加表数据-->
+    <insert id="addtionTable" parameterType="java.util.List">
+        insert into ${tableName}
+        <foreach collection="field" item="item" separator="," open="(" close=")">
+            ${item}
+        </foreach>
+        values
+        <foreach collection="value" item="item" separator="," open="(" close=")">
+            ${item}
+        </foreach>
 
-         select user_id ,user_name,user_password,user_email from tb_user
-         <where>
-             <choose>
-                 <when test="user_name !=null and user_name !=''">
-                     user_name=#{user_name}
-                 </when>
-             </choose>
-         </where>
+    </insert>
+    <!-- saveOrUpdate -->
+    <!-- <insert id="saveOrUpdate">
+         <selectKey keyProperty="count" resultType="int" order="BEFORE" statementType="STATEMENT">
+             select count(*) from ${tableName} where djlsh  = #{id}
+         </selectKey>
+         <if test="count > 0">
+             update ${tableName}
+             set ${file} = ${countryname}
 
+         </if>
+         <if test="count==0">
+             insert into ${tableName} values(#{id},#{countryname},#{countrycode})
+         </if>
 
-     </select>
-     <resultMap id="getListUser" type="com.zc.domain.Users">
-         <result column="user_id" property="user_id"/>
-         <result column="user_name" property="user_name"/>
-         <result column="user_password" property="user_password"/>
-         <result column="user_email" property="user_email"/>
-     </resultMap>-->
-    <select id="getsaleOrder" resultType="com.zc.domain.SaleOrder">
+     </insert>-->
+    <!-- 动态更新-->
+    <update id="updateTable" parameterType="java.util.Map" statementType="STATEMENT">
+        update ${tableName}
+        set ${colName}=${colValue}
+        where ${id} in
+        <foreach collection="list" item="item" index="index" separator=",">
+        </foreach>
+        ${item}
+    </update>
+    <!-- 删除  测试成功!但是还是要判断是否主键不然到时候批量删了-->
+    <delete id="deleteTable" parameterType="java.util.List">
+        delete
+        from ${tableName }
+        where ${primaryKey}
+        in
+        <foreach collection="value" index="index" item="value" separator="," open="(" close=")">
+
+            ${value}
+        </foreach>
+      and state='0'
+
+    </delete>
+
+    <select id="getsaleOrder" resultType="com.gl.domain.SaleOrder">
         select t1.djlsh,t1.gsmc, t1.ckmc, t1.khmc,t2.ksmc,t2.xstm,t2.gfje
         from xsddsh t1
-                 inner join xsddsb t2
-                            on t1.djlsh = t2.djlsh
+        inner join xsddsb t2
+        on t1.djlsh = t2.djlsh
+        where 1=1
+        <if test="ksmc !=null and ksmc !='' ">
+            and ksmc like CONCAT('%', #{ksmc}, '%')
 
-
+        </if>
 
     </select>
-    <resultMap id="getsaleOrder" type="com.zc.domain.SaleOrder">
+
+    <resultMap id="getsaleOrder" type="com.gl.domain.SaleOrder">
         <result column="djlsh" property="djlsh"/>
         <result column="gsmc" property="gsmc"/>
         <result column="ckmc" property="ckmc"/>
@@ -56,8 +75,100 @@
         <result column="xstm" property="xstm"/>
         <result column="gfje" property="gfje"/>
     </resultMap>
+    <select id="login" resultType="com.gl.domain.Users">
+        select id, name
+        from View_userpassword
+        where id = #{id}
+          and ps = #{ps}
+
+    </select>
+    <resultMap id="login" type="com.gl.domain.Users">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+
+    </resultMap>
+
+    <!-- <select id="getTable" resultType="java.util.HashMap" parameterType="java.util.HashMap" statementType="STATEMENT">
+         select ${field} from ${tableName}
+         <where>
 
 
-    <select id="getListUser" resultType="com.zc.domain.Users"/>
-    <select id="getU" resultType="com.zc.domain.Users"/>
+         </where>
+
+
+
+     </select>-->
+
+    <select id="getTable" resultType="java.util.Map" statementType="STATEMENT" parameterType="string">
+        select ${fields} from ${tableName}
+        <where>
+            <if test="condition !=null and condition !='' ">
+
+                ${condition}
+
+            </if>
+        </where>
+        <if test="groupBy !=null and groupBy !=''">
+            GROUP BY
+            ${groupBy}
+
+        </if>
+        <if test="orderBy !=null and groupBy !=''">
+            ORDER BY
+            ${orderBy};
+
+        </if>
+
+
+    </select>
+
+    <select id="getUser" resultType="java.util.HashMap" statementType="STATEMENT">
+        select ${field} from ${tableName}
+        <where>
+            <!-- 封装成list为入参参数 -->
+            <foreach collection="condition" item="item">
+                ${item.linkSymbol} ${item.field} ${item.compareSymbol} ${item.value}
+
+            </foreach>
+        </where>
+
+
+    </select>
+    <select id="getTableTest" resultType="java.lang.Object" statementType="STATEMENT">
+        select *
+        from ${tableName}
+
+    </select>
+    <!--查找权限表 -->
+    <select id="privilegeTable" resultType="java.lang.Object">
+        select tableName
+        from privilege
+        where id = #{id};
+
+
+    </select>
+    <!-- saveOrUpdate   修改如果修改失败就是增加数据-->
+    <insert id="saveOrUpdate">
+
+
+        if not exists(select 1
+                      from ${tableName}
+                      where ${primaryKey} = ${primaryValue})
+            insert into ${tableName} (${fields}) values (${values})
+
+
+        else
+
+            update ${tableName} set ${keyValue} where ${primaryKey} = ${primaryValue}
+
+
+    </insert>
+    <update id="update">
+        update ${tableName}
+        set ${fields}
+        where ${primaryKey};
+
+
+    </update>
+
 </mapper>

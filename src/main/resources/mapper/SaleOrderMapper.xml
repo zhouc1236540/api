@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zc.dao.SaleOrderMapper">
+<mapper namespace="com.gl.dao.SaleOrderMapper">
 
-    <select id="getsaleOrder" resultType="com.zc.domain.SaleOrder">
+    <select id="getsaleOrder" resultType="com.gl.domain.SaleOrder">
         select  gsmc, t1.ckmc, t1.khmc,t2.ksmc,t2.xstm,t2.gfje
         from xsddsh t1
                  inner join xsddsb t2
@@ -13,7 +13,7 @@
 
 
     </select>
-    <resultMap id="getsaleOrder" type="com.zc.domain.SaleOrder">
+    <resultMap id="getsaleOrder" type="com.gl.domain.SaleOrder">
         <result column="djlsh" property="djlsh"/>
         <result column="gsmc" property="gsmc"/>
         <result column="ckmc" property="ckmc"/>
